@@ -68,6 +68,17 @@
   (make-validator keys #(and (not= ::absent %) (not= val %))
                   (or msg "incorrect value")))
 
+
+(defn build-comp [f dflt]
+  (fn [keys & [msg]]
+   (let [keys (seqify keys)]
+    (fn [m]
+      (when-not (apply f (map #(get m % (get-in m (expand-name %))) keys))
+        (if (map? msg)
+          msg
+          {:keys keys :msg (or msg dflt)}))))))
+
+
 (defn equal [keys & [msg]]
   (let [keys (seqify keys)]
     (fn [m]
@@ -75,6 +86,14 @@
         (if (map? msg)
           msg
           {:keys keys :msg (or msg "must be equal")})))))
+
+(def greater (build-comp > "must be in ascendant order"))
+
+(def greater-or-equal (build-comp >= "must be in ascendant order or equal"))
+
+(def lower (build-comp > "must be in descendant order"))
+
+(def lower-or-equal (build-comp >= "must be in descendant orde or equal"))
 
 (defn matches [re keys & [msg]]
   (make-validator
@@ -300,10 +319,14 @@
                  (not (before? % date))))
     (or msg (str "must be before " date))))
 
+
+
+
+
 (defn- digits [n]
   #+clj (map #(Character/digit % 10) (str n))
   #+cljs (map #(- (.charCodeAt % 0) 48) (str n)))
- 
+
 (defn- luhn? [x]
   (let [n (if (string? x)
             (string/replace x #"[^0-9]" "")
@@ -333,6 +356,10 @@
    :not-blank not-blank
    :exact exact
    :equal equal
+   :greater greater
+   :greater-or-equal greater-or-equal
+   :lower lower
+   :lower-or-equal lower-or-equal
    :matches matches
    :min-length min-length
    :max-length max-length
