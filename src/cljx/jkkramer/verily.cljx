@@ -146,7 +146,7 @@
   (make-validator
     keys #(and (not= ::absent %)
                (not (string/blank? %))
-               (not (re-matches #"[^^]+@[^$]+" %))) ;RFC be damned
+               (not (re-matches #"(?i)[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?" %))) ;RFC be damned
     (or msg "must be a valid email")))
 
 (defn web-url [keys & [msg]]
