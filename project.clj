@@ -21,8 +21,9 @@
                    :rules :cljs}]}
   :profiles {:dev {:dependencies [[com.cemerick/clojurescript.test "0.0.4"]
                                   [com.cemerick/piggieback "0.0.5"]
-                                  [com.keminglabs/cljx "0.3.0"]]
-                   :plugins [[com.keminglabs/cljx "0.3.0"]]
+					[com.keminglabs/cljx "0.3.0" :exclusions [org.clojure/clojure]]
+                                  ]
+                   :plugins [[com.keminglabs/cljx "0.3.0" :exclusions [org.clojure/clojure]]]
                    :repl-options {:nrepl-middleware [cemerick.piggieback/wrap-cljs-repl
                                                      cljx.repl-middleware/wrap-cljx]}
                    :hooks [cljx.hooks]}})
